@@ -1,0 +1,59 @@
+graph LR
+    Cloud --> Folder
+    Folder --> Container_Registry
+    Folder --> Compute_Instance
+    Folder --> DNS_Zone
+    Folder --> Kubernetes_Cluster
+    Folder --> VPC_Network
+    Availability_Zone --> Compute_Instance
+    Availability_Zone --> VPC_Address
+    VPC_Network --> VPC_Subnet
+    VPC_Subnet --> VPC_Route_Table
+    VPC_Security_Group --> VPC_Security_Group_Rule
+    Kubernetes_Cluster --> Kubernetes_NodeGroup
+    Kubernetes_Cluster --> VPC_Network
+    Kubernetes_NodeGroup --> Compute_Instance
+    Compute_Instance --> Compute_Image
+    Compute_Instance --> Compute_Disk
+    DNS_Zone --> DNS_RecordSet
+    Compute_Instance --> VPC_Address
+    Compute_Instance --> VPC_Subnet
+    Compute_Instance --> VPC_Security_Group
+
+
+    subgraph DNS
+        DNS_Zone
+        DNS_RecordSet
+    end
+
+    subgraph Kubernetes
+        Kubernetes_Cluster
+        Kubernetes_NodeGroup
+    end
+
+    subgraph Compute
+        Compute_Instance
+        Compute_Image
+        Compute_Disk
+    end
+
+    subgraph "Yandex Cloud"
+        Cloud
+        Folder
+        Availability_Zone
+    end
+
+    subgraph VPC
+        subgraph "Security Group"
+            VPC_Security_Group
+            VPC_Security_Group_Rule
+        end
+
+        VPC_Network
+        VPC_Subnet
+        VPC_Route_Table
+        VPC_Address
+        VPC_Subnet
+        VPC_Security_Group
+    end
+
