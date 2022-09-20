@@ -1,0 +1,72 @@
+@startuml
+top to bottom direction
+
+title Classes - Class Diagram
+
+cloud Yandex_Cloud {
+  class Cloud
+  class Folder
+  class Availability_Zone
+  Cloud -o| Folder
+}
+
+package VPC {
+  class VPC_Network
+  class VPC_Subnet
+  class VPC_Address
+  class VPC_Route_Table
+  
+  package Security_Group {
+    class VPC_Security_Group
+    class VPC_Security_Group_Rule
+    VPC_Security_Group -o{ VPC_Security_Group_Rule
+  }
+  
+  Folder --d--o{ VPC_Network
+  
+'  VPC_Route_Table }o-- Folder
+  
+  VPC_Network --o{ VPC_Subnet
+'  VPC_Subnet }o-u- Folder
+  VPC_Subnet |o-- VPC_Route_Table
+  
+'  VPC_Address }o-- Folder
+  Availability_Zone --o{ VPC_Address 
+  
+}
+
+node Compute_Instance {
+  class Compute_Image
+  class Compute_Instance
+  class Compute_Disk
+  Availability_Zone ----o| Compute_Instance 
+  Folder ----o| Compute_Instance 
+  Compute_Instance |o---- VPC_Subnet
+  Compute_Instance |o-- Compute_Image
+  Compute_Instance |o--{ Compute_Disk
+  Compute_Instance |o----o| VPC_Address
+  Compute_Instance }o----o{ VPC_Security_Group
+}
+
+package DNS {
+  class DNS_Zone
+  class DNS_RecordSet
+  Folder --o{ DNS_Zone 
+  DNS_Zone --o{ DNS_RecordSet 
+}
+
+package Kubernetes {
+  class Kubernetes_Cluster
+  class Kubernetes_NodeGroup
+  
+  Folder ----o{ Kubernetes_Cluster
+  Kubernetes_Cluster }o---- VPC_Network 
+  
+  Kubernetes_Cluster --{ Kubernetes_NodeGroup
+  Kubernetes_NodeGroup |o---{ Compute_Instance
+}
+
+class Container_Registry
+Folder ----o{ Container_Registry 
+
+@enduml
